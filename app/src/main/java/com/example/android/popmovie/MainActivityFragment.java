@@ -8,6 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
+
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,14 +30,23 @@ import java.util.ArrayList;
 public class MainActivityFragment extends Fragment {
 
     private ArrayList<MovieItem> movieList = new ArrayList<>();
+    private Movieadapter mMovieadapter;
 
     public MainActivityFragment() {
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+        mMovieadapter = new Movieadapter(getActivity(),movieList);
+
+        // Get a reference to the ListView, and attach this adapter to it.
+        GridView gridView = (GridView) rootView.findViewById(R.id.MovieTable);
+        gridView.setAdapter(mMovieadapter);
+        return rootView;
     }
 
     private void updateMovies() {
@@ -48,6 +60,12 @@ public class MainActivityFragment extends Fragment {
     public void onStart() {
         super.onStart();
         updateMovies();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Picasso.with(getActivity()).cancelTag(this);
     }
 
     public class MovieListTask extends AsyncTask<String, Void, Void> {
@@ -152,3 +170,4 @@ public class MainActivityFragment extends Fragment {
 
     }
 }
+
