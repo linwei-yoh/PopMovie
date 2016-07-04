@@ -2,50 +2,47 @@ package com.example.android.popmovie;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 
-public class Movieadapter extends ArrayAdapter<MovieItem> {
+public class Movieadapter extends ArrayAdapter<MovieInfo> {
     private final Context context;
 
-    public Movieadapter(Activity context, ArrayList<MovieItem> MovieItems) {
+    public Movieadapter(Activity context, ArrayList<MovieInfo> MovieItems) {
         super(context, 0, MovieItems);
         this.context = context;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        SquaredImageView view = (SquaredImageView) convertView;
-        if (view == null) {
-            view = new SquaredImageView(getContext());
-            view.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+        MovieInfo MovieItem = getItem(position);
+
+        if (convertView == null) {
+            convertView = LayoutInflater.from(getContext()).inflate(
+                    R.layout.movieblock, parent, false);
         }
 
-        MovieItem movieInfo = getItem(position);
+        String BaseUrl = "http://image.tmdb.org/t/p/w185/";
+        BaseUrl += MovieItem.movieImgPath;
 
-        ImageView iconView = (ImageView) convertView.findViewById(R.id.movieImg);
+        ImageView iconView = (ImageView) convertView.findViewById(R.id.Movie_Img);
         Picasso.with(context)
-                .load(R.id.movieImg)
+                .load(BaseUrl)
 //                .error(R.drawable.error)
                 .fit()
                 .tag(context)
-                .into(view);
-        iconView.setImageResource(movieInfo.imgPath); //改为Picasso
+                .into(iconView);
 
-        TextView versionNameView = (TextView) convertView.findViewById(R.id.movieTitle);
-        versionNameView.setText(movieInfo.movieTitle);
-
-        return view;
+        return convertView;
     }
 }
 

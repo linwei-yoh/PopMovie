@@ -1,4 +1,17 @@
 <resources>
     <string name="app_name">PopMovie</string>
     <string name="action_settings">Settings</string>
+
+
+    <string name="order">Order</string>
+    <string name="sort_order">Sort Order</string>
+
+    <string name="order_type_key">OrderType</string>
+
+    <string name="order_popular">popular</string>
+    <string name="order_toprated">top_rated</string>
+
+    <string name="sort_order_popular">Popular</string>
+    <string name="sort_order_toprated">Top_Rated</string>
+    <string name="title_activity_detail">DetailActivity</string>
 </resources>

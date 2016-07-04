@@ -1,13 +1,20 @@
 package com.example.android.popmovie;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.squareup.picasso.Picasso;
@@ -24,36 +31,70 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-/**
- * A placeholder fragment containing a simple view.
- */
+
 public class MainActivityFragment extends Fragment {
 
-    private ArrayList<MovieItem> movieList = new ArrayList<>();
     private Movieadapter mMovieadapter;
+    ArrayList<MovieInfo> movieList = new ArrayList<>();
 
     public MainActivityFragment() {
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.movietable_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.action_order) {
+            startActivity(new Intent(getActivity(),SettingActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        mMovieadapter = new Movieadapter(getActivity(),movieList);
+        mMovieadapter = new Movieadapter(getActivity(),new ArrayList<MovieInfo>());
 
-        // Get a reference to the ListView, and attach this adapter to it.
         GridView gridView = (GridView) rootView.findViewById(R.id.MovieTable);
         gridView.setAdapter(mMovieadapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                MovieInfo Item = mMovieadapter.getItem(i);
+
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("Movie_Info",Item);
+                Intent intent = new Intent(getActivity(), DetailActivity.class)
+                        .putExtras(bundle);
+                startActivity(intent);
+            }
+        });
         return rootView;
     }
 
     private void updateMovies() {
         MovieListTask movieTask = new MovieListTask();
-//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-//        String location = prefs.getString(getString(R.string.pref_location_key),getString(R.string.pref_location_default));
-        movieTask.execute("popular");
+
+        SharedPreferences sharedPrefs =  PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String orderType = sharedPrefs.getString(getString(R.string.order_type_key),getString(R.string.order_popular));
+        movieTask.execute(orderType);
     }
 
     @Override
@@ -72,29 +113,29 @@ public class MainActivityFragment extends Fragment {
 
         private final String LOG_TAG = MovieListTask.class.getSimpleName();
 
-        private void getMovieDataFromJson(String forecastJsonStr)
+        private Void getMovieDataFromJson(String forecastJsonStr)
                 throws JSONException {
 
             // These are the names of the JSON objects that need to be extracted.
             final String MOVIE_LIST = "results";
             final String MOVIE_ID = "id";
-            final String MOVIE_TITLE = "title";
             final String IMG_PATH = "poster_path";
 
             JSONObject movieListJson = new JSONObject(forecastJsonStr);
             JSONArray movieArray = movieListJson.getJSONArray(MOVIE_LIST);
+
             movieList.clear();
             for(int i = 0; i < movieArray.length(); i++) {
 
                 JSONObject movieInfo = movieArray.getJSONObject(i);
                 String movieId = movieInfo.getString(MOVIE_ID);
-                String movieTitle = movieInfo.getString(MOVIE_TITLE);
                 String moviePath = movieInfo.getString(IMG_PATH);
 
-                movieList.add(new MovieItem(movieId,movieTitle,moviePath));
+                movieList.add(new MovieInfo(movieId,moviePath));
             }
-
+            return null;
         }
+
         @Override
         protected Void doInBackground(String... params) {
 
@@ -164,9 +205,13 @@ public class MainActivityFragment extends Fragment {
         }
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+        protected void onPostExecute(Void aVoid) {
+            if(movieList.size() != 0){
+                mMovieadapter.clear();
+                mMovieadapter.addAll(movieList);
+            }
         }
+
 
     }
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="order_type_values">
+        <item>@string/order_popular</item>
+        <item>@string/order_toprated</item>
+    </string-array>
+
+    <string-array name="order_type_option">
+        <item>@string/sort_order_popular</item>
+        <item>@string/sort_order_toprated</item>
+    </string-array>
+
+
+</resources>
