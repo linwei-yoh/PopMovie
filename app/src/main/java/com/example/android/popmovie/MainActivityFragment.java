@@ -78,11 +78,9 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 MovieInfo Item = mMovieadapter.getItem(i);
-
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("Movie_Info",Item);
-                Intent intent = new Intent(getActivity(), DetailActivity.class)
-                        .putExtras(bundle);
+                Intent intent = new Intent(getActivity(), DetailActivity.class).putExtras(bundle);
                 startActivity(intent);
             }
         });
@@ -134,12 +132,11 @@ public class MainActivityFragment extends Fragment {
                 JSONObject movieInfo = movieArray.getJSONObject(i);
 
                 TmpInfo.movieID = movieInfo.getString(MOVIE_ID);
+                TmpInfo.movieImgPath = movieInfo.getString(IMG_PATH);
                 TmpInfo.Title = movieInfo.getString(TITLE);
                 TmpInfo.overView = movieInfo.getString(OVERVIEW);
                 String[] array =  movieInfo.getString(RELEASEDATE).split("-",2);
                 TmpInfo.releaseYear = array[0];
-                TmpInfo.releaseDate = array[1];
-                TmpInfo.movieImgPath = movieInfo.getString(IMG_PATH);
                 TmpInfo.voteAverage = movieInfo.getString(VOTE_AVERAGE);
 
                 movieList.add(TmpInfo);

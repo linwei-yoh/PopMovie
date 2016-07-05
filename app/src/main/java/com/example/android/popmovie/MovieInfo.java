@@ -11,7 +11,6 @@ public class MovieInfo implements Parcelable{
     public String overView;
     public String voteAverage;
     public String releaseYear;
-    public String releaseDate;
 
     public MovieInfo()
     {
@@ -25,7 +24,6 @@ public class MovieInfo implements Parcelable{
         this.overView = in.readString();
         this.voteAverage = in.readString();
         this.releaseYear = in.readString();
-        this.releaseDate = in.readString();
     }
 
     @Override
@@ -41,7 +39,6 @@ public class MovieInfo implements Parcelable{
         parcel.writeString(overView);
         parcel.writeString(voteAverage);
         parcel.writeString(releaseYear);
-        parcel.writeString(releaseDate);
     }
 
     //github中的例程里 没有将其定义为static类型 Intent接受时会报错
