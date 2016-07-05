@@ -18,7 +18,7 @@ android {
         }
     }
     defaultConfig {
-        buildConfigField 'String','MOVIE_API_KEY','"503b56d48fbbb7ccdb40a397ac6af5a2"'
+        buildConfigField 'String','MOVIE_API_KEY','"MOVIE_API_KEY"'
     }
 
 }
