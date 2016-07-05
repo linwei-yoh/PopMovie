@@ -120,18 +120,29 @@ public class MainActivityFragment extends Fragment {
             final String MOVIE_LIST = "results";
             final String MOVIE_ID = "id";
             final String IMG_PATH = "poster_path";
+            final String TITLE = "original_title";
+            final String OVERVIEW = "overview";
+            final String VOTE_AVERAGE = "vote_average";
+            final String RELEASEDATE = "release_date";
 
             JSONObject movieListJson = new JSONObject(forecastJsonStr);
             JSONArray movieArray = movieListJson.getJSONArray(MOVIE_LIST);
 
             movieList.clear();
             for(int i = 0; i < movieArray.length(); i++) {
-
+                MovieInfo TmpInfo = new MovieInfo();
                 JSONObject movieInfo = movieArray.getJSONObject(i);
-                String movieId = movieInfo.getString(MOVIE_ID);
-                String moviePath = movieInfo.getString(IMG_PATH);
 
-                movieList.add(new MovieInfo(movieId,moviePath));
+                TmpInfo.movieID = movieInfo.getString(MOVIE_ID);
+                TmpInfo.Title = movieInfo.getString(TITLE);
+                TmpInfo.overView = movieInfo.getString(OVERVIEW);
+                String[] array =  movieInfo.getString(RELEASEDATE).split("-",2);
+                TmpInfo.releaseYear = array[0];
+                TmpInfo.releaseDate = array[1];
+                TmpInfo.movieImgPath = movieInfo.getString(IMG_PATH);
+                TmpInfo.voteAverage = movieInfo.getString(VOTE_AVERAGE);
+
+                movieList.add(TmpInfo);
             }
             return null;
         }

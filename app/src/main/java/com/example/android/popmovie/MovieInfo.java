@@ -5,20 +5,28 @@ import android.os.Parcelable;
 
 
 public class MovieInfo implements Parcelable{
-    String movieID;
-    String movieImgPath;
+    public String movieID;
+    public String movieImgPath;
+    public String Title;
+    public String overView;
+    public String voteAverage;
+    public String releaseYear;
+    public String releaseDate;
 
-    public MovieInfo(String vID, String Path)
+    public MovieInfo()
     {
-        this.movieID = vID;
-        this.movieImgPath = Path;
+
     }
 
     private MovieInfo(Parcel in){
         this.movieID = in.readString();
         this.movieImgPath = in.readString();
+        this.Title = in.readString();
+        this.overView = in.readString();
+        this.voteAverage = in.readString();
+        this.releaseYear = in.readString();
+        this.releaseDate = in.readString();
     }
-
 
     @Override
     public int describeContents() {
@@ -29,6 +37,11 @@ public class MovieInfo implements Parcelable{
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(movieID);
         parcel.writeString(movieImgPath);
+        parcel.writeString(Title);
+        parcel.writeString(overView);
+        parcel.writeString(voteAverage);
+        parcel.writeString(releaseYear);
+        parcel.writeString(releaseDate);
     }
 
     //github中的例程里 没有将其定义为static类型 Intent接受时会报错
